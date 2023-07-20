@@ -26,7 +26,7 @@ https://github.com/Swan1993/Date_Bottom_SheetPicker/assets/59397057/d2db3b70-977
 ## Getting started
 
 ```dart
-import package : import 'date_bottom_sheet_picker.dart';
+import 'date_bottom_sheet_picker.dart';
 ```
 Publisher
 Developers: Sajjad karimi && Abbas Dehghani.
