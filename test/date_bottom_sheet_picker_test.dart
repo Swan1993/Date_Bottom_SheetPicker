@@ -1,4 +1,4 @@
-import 'package:date_bottom_sheet_picker/date_bottom_sheet_picker.dart';
+import 'package:date_bottom_sheet_picker/src/date_bottom_sheet_picker_base.dart';
 import 'package:test/test.dart';
 
 void main() {

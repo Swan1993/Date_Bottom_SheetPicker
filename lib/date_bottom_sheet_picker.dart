@@ -1,18 +1,19 @@
 /// Support for doing something awesome.
 ///
-/// More dartdocs go here.
+
 library date_bottom_sheet_picker;
 
 import 'package:flutter/material.dart';
-export 'src/date_bottom_sheet_picker_base.dart';
-
 import 'package:flutter/cupertino.dart';
-
 
 import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class DateBottomSheetPicker extends StatefulWidget {
+  // Height FormField
+  double height;
+  // width FormField between 0 or 1 percent
+  double width;
   //Specifies the padding at the top and bottom.
   double paddingVertical;
   //Specifies padding on the left and right.
@@ -21,6 +22,8 @@ class DateBottomSheetPicker extends StatefulWidget {
   late TextEditingController? controller;
   // Border for text field.
   InputBorder? border;
+  // BorderRadius Form
+  double borderRadius;
   //LabelText for text field.
   String? labelText;
   // Shadow for BottomSheet.
@@ -41,25 +44,27 @@ class DateBottomSheetPicker extends StatefulWidget {
 
   // Maximum year that the picker an be scrolled.
   final DateTime lastDate;
-  DateBottomSheetPicker({
-    Key? key,
-    ShapeBorder? shapeBottomSheet,
-    InputBorder? border,
-    DateTime? firstDate,
-    DateTime? lastDate,
-    DateTime? selectedDate,
-    this.paddingVertical = 10,
-    this.paddingHorizontal = 10,
-    this.controller,
-    this.labelText = 'Date of birth',
-    this.elevation = 20,
-    this.minAge = 0,
-    this.backgroundColor = Colors.white,
-  })  : selectedDate = selectedDate ?? DateTime(1995, 4, 21),
+  DateBottomSheetPicker(
+      {Key? key,
+      ShapeBorder? shapeBottomSheet,
+      InputBorder? border,
+      DateTime? firstDate,
+      DateTime? lastDate,
+      DateTime? selectedDate,
+      this.height = 80,
+      this.width = 0.95,
+      this.paddingVertical = 0,
+      this.paddingHorizontal = 0,
+      this.controller,
+      this.labelText = 'Date of birth...',
+      this.elevation = 20,
+      this.minAge = 0,
+      this.backgroundColor = Colors.white,
+      this.borderRadius = 12.0})
+      : selectedDate = selectedDate ?? DateTime(1995, 4, 21),
         firstDate = firstDate ?? DateTime(1960, 1, 1),
         lastDate = lastDate ??= DateTime(2060),
-        border = border ??
-            OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
+        border = border ?? OutlineInputBorder(),
         shapeBottomSheet = shapeBottomSheet ??
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(18.0),
@@ -149,7 +154,7 @@ class _DateBottomSheetPickerState extends State<DateBottomSheetPicker>
 
   List<int> getYears() {
     return List.generate(DateTime.now().year + 1 - widget.firstDate.year,
-            (index) => widget.firstDate.year + index);
+        (index) => widget.firstDate.year + index);
   }
 
   List<String> getMonths() {
@@ -194,331 +199,314 @@ class _DateBottomSheetPickerState extends State<DateBottomSheetPicker>
 */
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(
-                vertical: widget.paddingVertical,
-                horizontal: widget.paddingHorizontal),
-            child: TextField(
-              controller: widget.controller,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0)),
-                labelText: widget.labelText,
-                suffixIcon: InkResponse(
-                  onTap: () {
-                    showModalBottomSheet(
-                      transitionAnimationController: AnimationController(
-                          vsync: this,
-                          duration: const Duration(seconds: 1),
-                          reverseDuration: const Duration(
-                            seconds: 1,
-                          )),
-                      elevation: widget.elevation,
-                      backgroundColor: widget.backgroundColor,
-                      shape: widget.shapeBottomSheet,
-                      context: context,
-                      builder: (context) {
-                        return StatefulBuilder(
-                          builder: (BuildContext context,
-                              StateSetter setState /*You can rename this!*/) {
-                            return SingleChildScrollView(
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                MediaQuery.of(context).size.height * 0.45,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 15.0),
-                                      child: Text(
-                                        widget.controller!.text =
-                                            DateFormat('yyyy-MM-dd').format(
-                                                widget.selectedDate.toLocal())
-                                        /*
+    return Container(
+      alignment: Alignment.center,
+      width: MediaQuery.of(context).size.width * widget.width,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: widget.paddingVertical,
+          horizontal: widget.paddingHorizontal,
+        ),
+        child: TextField(
+          textAlignVertical: TextAlignVertical.center,
+          controller: widget.controller,
+          decoration: InputDecoration(
+            contentPadding:
+                EdgeInsets.symmetric(vertical: widget.height, horizontal: 10),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(widget.borderRadius)),
+            labelText: widget.labelText,
+            suffixIcon: InkResponse(
+              onTap: () {
+                showModalBottomSheet(
+                  transitionAnimationController: AnimationController(
+                      vsync: this,
+                      duration: const Duration(seconds: 1),
+                      reverseDuration: const Duration(
+                        seconds: 1,
+                      )),
+                  elevation: widget.elevation,
+                  backgroundColor: widget.backgroundColor,
+                  shape: widget.shapeBottomSheet,
+                  context: context,
+                  builder: (context) {
+                    return StatefulBuilder(
+                      builder: (BuildContext context,
+                          StateSetter setState /*You can rename this!*/) {
+                        return SingleChildScrollView(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.45,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 15.0),
+                                  child: Text(
+                                    widget.controller!.text =
                                         DateFormat('yyyy-MM-dd').format(
-                                            widget.selectedDate.toLocal())*/
-                                        ,
-                                        style: const TextStyle(
-                                            fontSize: 25.0,
-                                            fontWeight: FontWeight.w600),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    const Divider(
-                                      thickness: 1,
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.9,
-                                      height: 200,
-                                      child: Row(
-                                        mainAxisAlignment:
+                                            widget.selectedDate.toLocal())
+                                    /*
+                                    DateFormat('yyyy-MM-dd').format(
+                                        widget.selectedDate.toLocal())*/
+                                    ,
+                                    style: const TextStyle(
+                                        fontSize: 25.0,
+                                        fontWeight: FontWeight.w600),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                const Divider(
+                                  thickness: 1,
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
+                                  height: 200,
+                                  child: Row(
+                                    mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
+                                    crossAxisAlignment:
                                         CrossAxisAlignment.center,
-                                        children: [
-                                          Expanded(
-                                            child: CupertinoPicker.builder(
-                                              scrollController: yearController,
-                                              diameterRatio: 1.0,
-                                              itemExtent: 60,
-                                              onSelectedItemChanged: (value) {
-                                                setState(() {
-                                                  widget.selectedDate =
-                                                      DateTime(
-                                                        getYears()[value],
-                                                        widget.selectedDate.month,
-                                                        getSelectedDayIndex(widget
-                                                            .selectedDate) +
-                                                            1,
-                                                      );
-                                                  widget.controller!.text =
-                                                      DateFormat('yyyy-MM-dd')
-                                                          .format(widget
-                                                          .selectedDate);
-                                                });
-                                                int dayCount = getDaysInMonth(
+                                    children: [
+                                      Expanded(
+                                        child: CupertinoPicker.builder(
+                                          scrollController: yearController,
+                                          diameterRatio: 1.0,
+                                          itemExtent: 60,
+                                          onSelectedItemChanged: (value) {
+                                            setState(() {
+                                              widget.selectedDate = DateTime(
+                                                getYears()[value],
+                                                widget.selectedDate.month,
+                                                getSelectedDayIndex(
+                                                        widget.selectedDate) +
+                                                    1,
+                                              );
+                                              widget.controller!.text =
+                                                  DateFormat('yyyy-MM-dd')
+                                                      .format(
+                                                          widget.selectedDate);
+                                            });
+                                            int dayCount = getDaysInMonth(
+                                              widget.selectedDate.year,
+                                              widget.selectedDate.month,
+                                            ).length;
+                                            if (dayCount <=
+                                                getSelectedDayIndex(
+                                                    widget.selectedDate)) {
+                                              dayController
+                                                  .jumpToItem(dayCount - 1);
+                                              setState(() {
+                                                widget.selectedDate = DateTime(
                                                   widget.selectedDate.year,
                                                   widget.selectedDate.month,
-                                                ).length;
-                                                if (dayCount <=
-                                                    getSelectedDayIndex(
-                                                        widget.selectedDate)) {
-                                                  dayController
-                                                      .jumpToItem(dayCount - 1);
-                                                  setState(() {
-                                                    widget.selectedDate =
-                                                        DateTime(
-                                                          widget.selectedDate.year,
-                                                          widget.selectedDate.month,
-                                                          getDaysInMonth(
-                                                              widget
-                                                                  .selectedDate
-                                                                  .year,
-                                                              widget
-                                                                  .selectedDate
-                                                                  .month)
-                                                              .last,
-                                                        );
-                                                    widget.controller!.text =
-                                                        DateFormat('yyyy-MM-dd')
-                                                            .format(widget
+                                                  getDaysInMonth(
+                                                          widget.selectedDate
+                                                              .year,
+                                                          widget.selectedDate
+                                                              .month)
+                                                      .last,
+                                                );
+                                                widget.controller!.text =
+                                                    DateFormat('yyyy-MM-dd')
+                                                        .format(widget
                                                             .selectedDate);
-                                                  });
-                                                }
-                                                monthController.jumpToItem(
-                                                  getSelectedMonthIndex(
-                                                      widget.selectedDate),
-                                                );
-                                              },
-                                              itemBuilder: (context, index) {
-                                                return Container(
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                    getYears()[index]
-                                                        .toString(),
-                                                    style: const TextStyle(
-                                                        fontSize: 16.0),
-                                                  ),
-                                                );
-                                              },
-                                              childCount: getYears().length -
-                                                  widget.minAge.toInt(),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: CupertinoPicker.builder(
-                                              scrollController: monthController,
-                                              diameterRatio: 1.0,
-                                              itemExtent: 60,
-                                              onSelectedItemChanged: (value) {
-                                                setState(() {
-                                                  widget.selectedDate =
-                                                      DateTime(
-                                                        widget.selectedDate.year,
-                                                        value + 1,
-                                                        getSelectedDayIndex(widget
-                                                            .selectedDate) +
-                                                            1,
-                                                      );
-                                                  widget.controller!.text =
-                                                      DateFormat('yyyy-MM-dd')
-                                                          .format(widget
-                                                          .selectedDate);
-                                                });
-                                                int dayCount = getDaysInMonth(
+                                              });
+                                            }
+                                            monthController.jumpToItem(
+                                              getSelectedMonthIndex(
+                                                  widget.selectedDate),
+                                            );
+                                          },
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                getYears()[index].toString(),
+                                                style: const TextStyle(
+                                                    fontSize: 16.0),
+                                              ),
+                                            );
+                                          },
+                                          childCount: getYears().length -
+                                              widget.minAge.toInt(),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: CupertinoPicker.builder(
+                                          scrollController: monthController,
+                                          diameterRatio: 1.0,
+                                          itemExtent: 60,
+                                          onSelectedItemChanged: (value) {
+                                            setState(() {
+                                              widget.selectedDate = DateTime(
+                                                widget.selectedDate.year,
+                                                value + 1,
+                                                getSelectedDayIndex(
+                                                        widget.selectedDate) +
+                                                    1,
+                                              );
+                                              widget.controller!.text =
+                                                  DateFormat('yyyy-MM-dd')
+                                                      .format(
+                                                          widget.selectedDate);
+                                            });
+                                            int dayCount = getDaysInMonth(
+                                              widget.selectedDate.year,
+                                              widget.selectedDate.month,
+                                            ).length;
+                                            if (dayCount <=
+                                                getSelectedDayIndex(
+                                                    widget.selectedDate)) {
+                                              // dayController.jumpToItem(dayCount - 1);
+                                              dayController.animateToItem(
+                                                  dayCount - 1,
+                                                  curve: Curves.bounceIn,
+                                                  duration: const Duration(
+                                                      microseconds: 750));
+                                              setState(() {
+                                                widget.selectedDate = DateTime(
                                                   widget.selectedDate.year,
                                                   widget.selectedDate.month,
-                                                ).length;
-                                                if (dayCount <=
-                                                    getSelectedDayIndex(
-                                                        widget.selectedDate)) {
-                                                  // dayController.jumpToItem(dayCount - 1);
-                                                  dayController.animateToItem(
-                                                      dayCount - 1,
-                                                      curve: Curves.bounceIn,
-                                                      duration: const Duration(
-                                                          microseconds: 750));
-                                                  setState(() {
-                                                    widget.selectedDate =
-                                                        DateTime(
-                                                          widget.selectedDate.year,
-                                                          widget.selectedDate.month,
-                                                          getDaysInMonth(
-                                                              widget
-                                                                  .selectedDate
-                                                                  .year,
-                                                              widget
-                                                                  .selectedDate
-                                                                  .month)
-                                                              .last,
-                                                        );
-                                                    widget.controller!.text =
-                                                        DateFormat('yyyy-MM-dd')
-                                                            .format(widget
-                                                            .selectedDate);
-                                                  });
-                                                }
-                                                yearController.jumpToItem(
-                                                    getSelectedYearIndex(
-                                                        widget.selectedDate));
-                                              },
-                                              itemBuilder: (context, index) {
-                                                return Container(
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                    getMonths()[index],
-                                                    style: const TextStyle(
-                                                        fontSize: 16.0),
-                                                  ),
+                                                  getDaysInMonth(
+                                                          widget.selectedDate
+                                                              .year,
+                                                          widget.selectedDate
+                                                              .month)
+                                                      .last,
                                                 );
-                                              },
-                                              childCount: getMonths().length,
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: CupertinoPicker.builder(
-                                              scrollController: dayController,
-                                              diameterRatio: 1.0,
-                                              itemExtent: 60,
-                                              onSelectedItemChanged: (value) {
-                                                setState(
-                                                      () {
-                                                    widget.selectedDate =
-                                                        DateTime(
-                                                          widget.selectedDate.year,
-                                                          widget.selectedDate.month,
-                                                          getDaysInMonth(
-                                                              widget.selectedDate
-                                                                  .year,
-                                                              widget.selectedDate
-                                                                  .month)[value],
-                                                        );
+                                                widget.controller!.text =
+                                                    DateFormat('yyyy-MM-dd')
+                                                        .format(widget
+                                                            .selectedDate);
+                                              });
+                                            }
+                                            yearController.jumpToItem(
+                                                getSelectedYearIndex(
+                                                    widget.selectedDate));
+                                          },
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                getMonths()[index],
+                                                style: const TextStyle(
+                                                    fontSize: 16.0),
+                                              ),
+                                            );
+                                          },
+                                          childCount: getMonths().length,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: CupertinoPicker.builder(
+                                          scrollController: dayController,
+                                          diameterRatio: 1.0,
+                                          itemExtent: 60,
+                                          onSelectedItemChanged: (value) {
+                                            setState(
+                                              () {
+                                                widget.selectedDate = DateTime(
+                                                  widget.selectedDate.year,
+                                                  widget.selectedDate.month,
+                                                  getDaysInMonth(
+                                                      widget.selectedDate.year,
+                                                      widget.selectedDate
+                                                          .month)[value],
+                                                );
 
-                                                    widget.controller!.text =
-                                                        DateFormat('yyyy-MM-dd')
-                                                            .format(widget
+                                                widget.controller!.text =
+                                                    DateFormat('yyyy-MM-dd')
+                                                        .format(widget
                                                             .selectedDate);
-                                                  },
-                                                );
                                               },
-                                              itemBuilder: (context, index) {
-                                                return Container(
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                    getDaysInMonth(
-                                                        widget.selectedDate
-                                                            .year,
+                                            );
+                                          },
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                getDaysInMonth(
+                                                        widget
+                                                            .selectedDate.year,
                                                         widget.selectedDate
                                                             .month)[index]
-                                                        .toString(),
-                                                    style: const TextStyle(
-                                                        fontSize: 16.0),
-                                                  ),
-                                                );
-                                              },
-                                              childCount: getDaysInMonth(
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                    fontSize: 16.0),
+                                              ),
+                                            );
+                                          },
+                                          childCount: getDaysInMonth(
                                                   widget.selectedDate.year,
                                                   widget.selectedDate.month)
-                                                  .length,
-                                            ),
-                                          ),
-                                        ],
+                                              .length,
+                                        ),
                                       ),
-                                    ),
-                                    const Divider(
-                                      thickness: 1,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        MaterialButton(
-                                          shape: OutlineInputBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(12.0),
-                                          ),
-                                          minWidth: MediaQuery.of(context)
-                                              .size
-                                              .width *
-                                              0.45,
-                                          height: 60,
-                                          child: const Text("Cancel"),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                        MaterialButton(
-                                          shape: OutlineInputBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(12.0),
-                                          ),
-                                          color: Theme.of(context).primaryColor,
-                                          minWidth: MediaQuery.of(context)
-                                              .size
-                                              .width *
-                                              0.45,
-                                          height: 60,
-                                          child: const Text("Selected"),
-                                          onPressed: () {
-                                            widget.controller!.text = widget
-                                                .selectedDate
-                                                .toString()
-                                                .split(" ")[0];
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      ],
-                                    )
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                                const Divider(
+                                  thickness: 1,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    MaterialButton(
+                                      shape: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      minWidth:
+                                          MediaQuery.of(context).size.width *
+                                              0.45,
+                                      height: 60,
+                                      child: const Text("Cancel"),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    MaterialButton(
+                                      shape: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      color: Theme.of(context).primaryColor,
+                                      minWidth:
+                                          MediaQuery.of(context).size.width *
+                                              0.45,
+                                      height: 60,
+                                      child: const Text("Selected"),
+                                      onPressed: () {
+                                        widget.controller!.text = widget
+                                            .selectedDate
+                                            .toString()
+                                            .split(" ")[0];
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
                         );
                       },
                     );
                   },
-                  child: const Icon(Icons.calendar_month_rounded),
-                ),
-              ),
+                );
+              },
+              child: const Icon(Icons.calendar_month_rounded),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 }
-
